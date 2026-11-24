@@ -24,8 +24,8 @@ repo exists to make that citation trustworthy — page-aware chunking, hybrid re
 that forces abstention, and a check that flags any marker the model invented.
 
 Built from scratch — no LangChain, no LlamaIndex, no vector-database service. About 3,000 lines of
-Python across 24 small modules (a third of it comments explaining *why*), so every stage of the
-pipeline is something you can open, read, and change.
+Python across 24 small modules, roughly one line in seven a comment or docstring explaining *why*,
+so every stage of the pipeline is something you can open, read, and change.
 
 ---
 
