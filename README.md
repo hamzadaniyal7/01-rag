@@ -239,8 +239,8 @@ Project 1 of 3 in a build-it-yourself AI-engineering series:
 | | Project | What it teaches |
 |---|---|---|
 | **01** | **rag** *(this repo)* | Retrieval, grounding, and citations you can verify |
-| 02 | agents | Loop engineering — plan → act → check over many steps |
-| 03 | deploy | Serving an open model yourself with vLLM or SGLang |
+| 02 | [agents](https://github.com/hamzadaniyal7/02-agents) | Loop engineering — plan → act → check over many steps |
+| 03 | [deploy](https://github.com/hamzadaniyal7/03-deploy) | Serving an open model yourself with vLLM or SGLang |
 
 ## License
 
