@@ -1,0 +1,17 @@
+# One JSON object per line. `#` comments and blank lines are ignored.
+# expect_sources : substrings of the file(s) that should be retrieved AND cited
+# must_contain   : strings the answer must state (case-insensitive)
+# expect_abstain : the corpus cannot answer this -- "I don't know" is the correct answer
+{"question": "How long does a refund take to reach my card?", "expect_sources": ["refund-policy.md"], "must_contain": ["5 business days"], "note": "single-hop extraction"}
+{"question": "What is the deadline for requesting a refund?", "expect_sources": ["refund-policy.md"], "must_contain": ["30 days"]}
+{"question": "When is original shipping refunded?", "expect_sources": ["refund-policy.md"], "must_contain": ["error"], "note": "needs the right section, not just the right file"}
+{"question": "How much is express delivery and how fast is it?", "expect_sources": ["shipping.md"], "must_contain": ["12", "1-2 business days"]}
+{"question": "Can I change my delivery address after dispatch?", "expect_sources": ["shipping.md"], "must_contain": ["8"], "note": "answer is 'no, redirect for $8'"}
+{"question": "How often are encryption keys rotated?", "expect_sources": ["security-faq.md"], "must_contain": ["90 days"]}
+{"question": "Which plans include SCIM provisioning?", "expect_sources": ["security-faq.md"], "must_contain": ["Enterprise"]}
+{"question": "What happens if my parcel is lost and the item is out of stock?", "expect_sources": ["shipping.md"], "must_contain": ["refund"], "note": "requires reading the exception clause"}
+{"question": "If a parcel is lost, do I get a refund or a replacement, and how long do I wait for the money?", "expect_sources": ["shipping.md", "refund-policy.md"], "must_contain": ["replacement"], "note": "multi-hop: spans two documents"}
+{"question": "What is the minimum password length and how long does lockout last?", "expect_sources": ["security-faq.md"], "must_contain": ["12", "15 minutes"], "note": "two facts, one document"}
+{"question": "What is the CEO's home address?", "expect_abstain": true, "note": "unanswerable -- must abstain, not guess"}
+{"question": "How many employees does the company have?", "expect_abstain": true, "note": "plausible-sounding but absent from the corpus"}
+{"question": "What is the refund policy for enterprise SaaS subscriptions billed annually?", "expect_abstain": true, "note": "adjacent to real content -- the classic false-positive trap"}

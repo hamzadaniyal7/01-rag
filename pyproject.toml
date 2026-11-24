@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ragcite"
+version = "0.1.0"
+description = "A from-scratch RAG pipeline that answers questions over your own documents and cites the exact file and page."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Hamza Daniyal" }]
+keywords = ["rag", "retrieval", "llm", "citations", "anthropic", "claude"]
+
+dependencies = [
+  "anthropic>=1.0.0",
+  "numpy>=1.26",
+  "pypdf>=4.2",
+]
+
+[project.optional-dependencies]
+# Local sentence-transformer embeddings (no API calls, ~90MB model download).
+local = ["sentence-transformers>=3.0"]
+# Hosted embeddings from Voyage AI (Anthropic's recommended embedding partner).
+voyage = ["voyageai>=0.3"]
+# HTTP API around the same pipeline.
+api = ["fastapi>=0.115", "uvicorn[standard]>=0.30"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+ragcite = "ragcite.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ragcite"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["B008"]

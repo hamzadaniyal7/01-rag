@@ -1,0 +1,42 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install
+        run: pip install -e '.[dev]'
+
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+
+      # No API key, no model download: the hashing embedder and the deterministic
+      # fake model make the whole suite runnable in CI.
+      - name: Test
+        run: pytest -q
+
+      - name: Smoke-test the CLI end to end
+        run: |
+          ragcite ingest corpus/ --db-path "$RUNNER_TEMP/ci.db"
+          ragcite search "refund processing time" --db-path "$RUNNER_TEMP/ci.db"
+          ragcite ask "How long do refunds take?" --llm fake --quiet \
+            --db-path "$RUNNER_TEMP/ci.db"
+          ragcite eval --retrieval-only --no-save --db-path "$RUNNER_TEMP/ci.db"

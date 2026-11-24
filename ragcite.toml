@@ -1,0 +1,23 @@
+# ragcite configuration -- see docs/03-pipeline.md for what each knob does.
+[ragcite]
+db_path = ".ragcite/index.db"
+corpus_dir = "corpus"
+
+# Ingestion
+chunk_size = 512        # target chunk size in tokens
+chunk_overlap = 64
+
+# Embeddings: hash:512 (offline, lexical) | st:all-MiniLM-L6-v2 (local, semantic)
+#             | voyage:voyage-3 (hosted, best quality)
+embedder = "hash:512"
+
+# Retrieval
+retrieval_mode = "hybrid"   # dense | lexical | hybrid
+top_k = 8
+candidate_k = 40
+max_per_doc = 3
+
+# Generation
+model = "claude-opus-5"
+effort = "medium"           # low | medium | high | xhigh | max
+rerank = false
