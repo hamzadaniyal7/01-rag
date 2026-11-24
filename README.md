@@ -32,7 +32,7 @@ pipeline is something you can open, read, and change.
 ## Quickstart
 
 ```bash
-git clone https://github.com/<you>/01-rag && cd 01-rag
+git clone https://github.com/hamzadaniyal7/01-rag && cd 01-rag
 python -m venv .venv && source .venv/bin/activate     # Python 3.11+
 pip install -e '.[dev]'
 

@@ -30,6 +30,10 @@ dev = ["pytest>=8.0", "ruff>=0.6"]
 [project.scripts]
 ragcite = "ragcite.cli:main"
 
+[project.urls]
+Homepage = "https://github.com/hamzadaniyal7/01-rag"
+Documentation = "https://github.com/hamzadaniyal7/01-rag/tree/main/docs"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/ragcite"]
 
