@@ -20,7 +20,6 @@ Defaults chosen here, and why:
 
 from __future__ import annotations
 
-import os
 from typing import Any
 
 from ragcite.llm.base import LLM, LLMResult
@@ -31,6 +30,13 @@ FALLBACK_BETA = "server-side-fallback-2026-07-01"
 # generation reject it). Sending it anyway is a 400, so it is filtered here
 # rather than leaving a trap for anyone who swaps the model in ragcite.toml.
 NO_EFFORT_MODELS = ("haiku", "-4-5")
+
+NO_CREDENTIALS = (
+    "no Anthropic credentials found. Either:\n"
+    "  export ANTHROPIC_API_KEY=sk-ant-...   (see .env.example)\n"
+    "  ant auth login                        (stores a profile the SDK reads)\n"
+    "  ragcite ask ... --llm fake            (run the pipeline with no model)"
+)
 
 
 class AnthropicLLM(LLM):
@@ -50,13 +56,24 @@ class AnthropicLLM(LLM):
         except ImportError as exc:  # pragma: no cover - dependency is declared
             raise ImportError("pip install anthropic") from exc
 
-        if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
-            # Not fatal: the SDK also resolves an `ant auth login` profile from
-            # ~/.config/anthropic. Only the constructor below can tell for sure.
-            pass
-
         self._anthropic = anthropic
-        self.client = anthropic.Anthropic()
+        # An unset ANTHROPIC_API_KEY does not mean there are no credentials: the
+        # SDK also resolves ANTHROPIC_AUTH_TOKEN and an `ant auth login` profile
+        # from ~/.config/anthropic. Only the constructor can tell for sure, so
+        # let it decide and translate its failure into something actionable --
+        # this is the first error a new user is likely to hit.
+        try:
+            self.client = anthropic.Anthropic()
+        except Exception as exc:
+            raise RuntimeError(NO_CREDENTIALS) from exc
+        if not any(
+            getattr(self.client, attr, None)
+            for attr in ("api_key", "auth_token", "credentials", "_credentials")
+        ):
+            # The client constructs fine with no credentials and only fails deep
+            # inside header building at request time, with a TypeError that says
+            # nothing about what to do. Fail here instead.
+            raise RuntimeError(NO_CREDENTIALS)
         self.model = model
         self.effort = effort
         self.thinking = thinking
